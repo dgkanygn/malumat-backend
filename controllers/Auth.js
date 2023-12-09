@@ -11,7 +11,16 @@ export const register = async (req, res) => {
   try {
     const { username, email, password, bio, name, surname } = req.body;
 
-    const result = await cloudinary.uploader.upload(req.file.path);
+    let imageUrl;
+
+    console.log(req.file);
+
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path);
+      imageUrl = result.secure_url;
+    } else {
+      imageUrl = " ";
+    }
 
     const user = await User.findOne({ email });
 
@@ -53,7 +62,7 @@ export const register = async (req, res) => {
       bio,
       name,
       surname,
-      image: result ? result.secure_url : " ",
+      image: imageUrl,
     });
 
     res.status(201).json({

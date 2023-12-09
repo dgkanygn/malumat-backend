@@ -8,14 +8,23 @@ export const createPost = async (req, res) => {
   try {
     const { title, description, post, authorId, authorImage } = req.body;
 
-    const result = await cloudinary.uploader.upload(req.file.path);
+    let imageUrl;
+
+    console.log(req.file);
+
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path);
+      imageUrl = result.secure_url;
+    } else {
+      imageUrl = " ";
+    }
 
     const newPost = await Post.create({
       title,
       description,
       post,
       author: authorId,
-      image: result ? result.secure_url : null,
+      image: imageUrl,
       authorImage,
     });
 
