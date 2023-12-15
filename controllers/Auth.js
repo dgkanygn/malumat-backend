@@ -76,18 +76,27 @@ export const register = async (req, res) => {
 // login
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const { loginData, password } = req.body;
+
+    let user;
+
+    const emailPattern = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+
+    const result = emailPattern.test(loginData);
+
+    if (result) {
+      user = await User.findOne({ email: loginData });
+    } else {
+      user = await User.findOne({ username: loginData });
+    }
 
     if (!user) {
-      return res.status(500).json({ message: "böyle bir kullanıcı yok" });
+      return res
+        .status(500)
+        .json({ message: "yanlış mail adresi ya da kullanıcı adı" });
     }
 
     const comparePassword = await bcryptjs.compare(password, user.password);
-
-    if (!validateEmail(email)) {
-      return res.status(500).json({ message: "geçersiz mail adresi" });
-    }
 
     if (!comparePassword) {
       return res.status(500).json({ message: "yanlış parola" });
