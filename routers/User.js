@@ -18,7 +18,7 @@ userRouter.get("/users", getAllUsers);
 userRouter.get("/user/:id", getUserById);
 
 // kullanıcı sil
-userRouter.delete("/deleteUser/:id", deleteUser);
+userRouter.delete("/deleteUser", deleteUser);
 
 // username ile kullanıcı getir
 userRouter.get("/getUserByUsername/:username", getUserByUsername);

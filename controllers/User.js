@@ -48,23 +48,34 @@ export const getUserByUsername = async (req, res) => {
 // kullanıcı silme
 export const deleteUser = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { password } = req.body;
+    const { username, password } = req.query;
 
-    const user = await User.findById(id);
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(404).json({ message: "Kullanıcı bulunamadı." });
+    }
 
     const isPasswordValid = await bcryptjs.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return res.status(401).json({ message: "geçersiz parola" });
+      return res.status(401).json({ message: "Geçersiz şifre." });
     }
 
-    await User.findByIdAndRemove(id);
-    await Comment.deleteMany({ author: id });
-    await Post.deleteMany({ author: id });
+    const postsToDelete = await Post.find({ author: username });
+    const commentsToDelete = await Comment.find({ owner: username });
 
-    res.status(201).json({
-      message: "kullanici ve iliskili oldugu butun document'lar silindi.",
+    for (const post of postsToDelete) {
+      await post.deleteOne();
+    }
+    for (const comment of commentsToDelete) {
+      await comment.deleteOne();
+    }
+
+    await user.deleteOne({ username });
+
+    res.status(200).json({
+      message: "Kullanıcı başarıyla silindi.",
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
