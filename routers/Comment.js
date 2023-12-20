@@ -2,6 +2,8 @@ import express from "express";
 
 const commentRouter = express.Router();
 
+import { checkToken } from "../middleware/checkToken.js";
+
 import {
   createComment,
   deleteComment,
@@ -14,10 +16,10 @@ import {
 } from "../controllers/Comment.js";
 
 // yeni yorum oluşturma
-commentRouter.post("/createComment", createComment);
+commentRouter.post("/createComment", checkToken, createComment);
 
 // yorum beğenme
-commentRouter.put("/addLikesComment", addLikesComment);
+commentRouter.put("/addLikesComment", checkToken, addLikesComment);
 
 // tüm yorumları getirme
 commentRouter.get("/comments", getAllComments);
@@ -26,10 +28,10 @@ commentRouter.get("/comments", getAllComments);
 commentRouter.get("/comment/:id", getCommentById);
 
 // yorum güncelleme
-commentRouter.put("/updateComment/:id", updateComment);
+commentRouter.put("/updateComment/:id", checkToken, updateComment);
 
-// yorum silme
-commentRouter.delete("/deleteComment/:id", deleteComment);
+// yorum silm
+commentRouter.delete("/deleteComment/:id", checkToken, deleteComment);
 
 // bir postun yorumlarını getirme
 commentRouter.get("/getCommentByPostId/:postId", getCommentByPostId);
