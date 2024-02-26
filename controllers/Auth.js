@@ -27,21 +27,21 @@ export const register = async (req, res) => {
     const currenUsername = await User.findOne({ username });
 
     if (user) {
-      return res.status(500).json({
+      return res.status(409).json({
         message: "bu mail adresi ile kayıtlı bir kullanıcı zaten var",
       });
     }
 
     if (currenUsername) {
-      return res.status(500).json({ message: "bu kullanıcı adı alınmış" });
+      return res.status(409).json({ message: "bu kullanıcı adı alınmış" });
     }
 
     if (!validateEmail(email)) {
-      return res.status(500).json({ message: "geçersiz mail adresi" });
+      return res.status(400).json({ message: "geçersiz mail adresi" });
     }
 
     if (!validateUsername(username)) {
-      return res.status(500).json({
+      return res.status(400).json({
         message:
           "kullanıcı adı belirlerken türkçe ve boşluk karakteri kullanmayın",
       });
@@ -49,7 +49,7 @@ export const register = async (req, res) => {
 
     if (password.length < 6) {
       return res
-        .status(500)
+        .status(400)
         .json({ message: "parola en az 6 karakter olmalı" });
     }
 
@@ -92,14 +92,14 @@ export const login = async (req, res) => {
 
     if (!user) {
       return res
-        .status(500)
+        .status(401)
         .json({ message: "yanlış mail adresi ya da kullanıcı adı" });
     }
 
     const comparePassword = await bcryptjs.compare(password, user.password);
 
     if (!comparePassword) {
-      return res.status(500).json({ message: "yanlış parola" });
+      return res.status(401).json({ message: "yanlış parola" });
     }
 
     const token = jwt.sign({ id: user.id }, process.env.SECRET_TOKEN, {

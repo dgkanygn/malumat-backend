@@ -41,7 +41,7 @@ export const getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find();
 
-    res.status(201).json({ posts });
+    res.status(200).json({ posts });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -84,7 +84,7 @@ export const deletePost = async (req, res) => {
     await Comment.deleteMany({ post: id });
 
     res
-      .status(201)
+      .status(200)
       .json({ message: "post ve ilişkili olduğu bütün document'lar silindi" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -184,7 +184,7 @@ export const getFavLengthById = async (req, res) => {
   try {
     const post = await Post.findById(req.params.postId);
     const favLength = post.favorites.length;
-    return res.json({ favLength });
+    return res.status(200).json({ favLength });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -204,7 +204,7 @@ export const filterPostAndUser = async (req, res) => {
 
     const filteredResults = [...posts, ...users];
 
-    res.json(filteredResults);
+    res.status(200).json(filteredResults);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -215,9 +215,9 @@ export const getTrends = async (req, res) => {
   try {
     const limit = 6;
     const trends = await Post.find().exec();
-    trends.sort((a, b) => b.favorites.length - a.favorites.length); // Büyükten küçüğe sıralama
-    const limitedPosts = trends.slice(0, limit); // İstenen sınırı uygula
-    res.status(201).json({ limitedPosts });
+    trends.sort((a, b) => b.favorites.length - a.favorites.length);
+    const limitedPosts = trends.slice(0, limit);
+    res.status(200).json({ limitedPosts });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

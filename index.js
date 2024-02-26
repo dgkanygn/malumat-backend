@@ -20,6 +20,6 @@ app.use("/", postRouter);
 app.use("/", commentRouter);
 
 app.listen(port, () => {
-  console.log(`listening on port ${port}`);
+  console.log(`${port}. porttan dinleniyor...`);
   connectDB();
 });

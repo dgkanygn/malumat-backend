@@ -28,7 +28,7 @@ export const getAllComments = async (req, res) => {
   try {
     const getComments = await Comment.find();
 
-    res.status(201).json({ getComments });
+    res.status(200).json({ getComments });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -74,7 +74,7 @@ export const deleteComment = async (req, res) => {
 
     await Comment.findByIdAndRemove(id);
 
-    res.status(201).json({ message: "comment silme işlemi başarılı" });
+    res.status(200).json({ message: "comment silme işlemi başarılı" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

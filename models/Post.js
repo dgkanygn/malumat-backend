@@ -12,9 +12,9 @@ const Post = new Schema(
 
     description: {
       type: String,
-      // required: true,
       max: 70,
     },
+
     post: {
       type: String,
       required: true,
